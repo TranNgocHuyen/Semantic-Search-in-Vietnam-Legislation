@@ -75,7 +75,7 @@ def clean_text(text):
 def remove_stopword(text):
     words_list = text.split()
 
-    with open("vietnamese-stopwords.txt", encoding='utf-8') as f:
+    with open("D:\\NLP\\Semantic-Search-in-Vietnam-Legislation\\search_with_text\\search_text_with_Qdrant\\vietnamese-stopwords.txt", encoding='utf-8') as f:
         stopwords=f.read()                                                                                                                                                                                                                                          
     filtered_words= [i for i in words_list if i not in stopwords]
 

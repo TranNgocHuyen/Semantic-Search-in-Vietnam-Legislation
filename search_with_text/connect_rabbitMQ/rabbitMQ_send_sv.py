@@ -16,6 +16,10 @@ rabbitmq_config = {
 credentials = pika.PlainCredentials(rabbitmq_config["UserName"], rabbitmq_config["Password"])
 parameters = pika.ConnectionParameters(rabbitmq_config["HostName"], rabbitmq_config["Port"], rabbitmq_config["VirtualHost"], credentials)
 connection = pika.BlockingConnection(parameters)
+
+# # thiết lập kết nối với máy chủ local
+# connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
 channel = connection.channel()
 
 # Tạo hàng đợi nếu chưa tồn tại

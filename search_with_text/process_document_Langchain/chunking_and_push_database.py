@@ -14,9 +14,11 @@ import datetime
 # lấy tên, title và content
 def read_file_docx(folder_path, file_name):
     file_path = os.path.join(folder_path, file_name)
+    print(file_path)
     #check file và đường dẫn file        
     if os.path.exists(file_path):
-        print("Doc "+file_name+ " exist")
+        
+        print("File docx "+file_name+ " exist")
         try: 
             full_text = ""
             document = docx.Document(file_path) # là 1 đối tượng
@@ -48,34 +50,18 @@ def search_remove_line(line):
     if match or match_2:
         return True
 
-def clean_text(text):
-    # xóa xuống dòng
-    text=text.replace("\n"," ")
-
-    # xóa các mục lục đầu dòng
-    text = re.sub(r'\d\.\s*', '', text)
-
-    text=re.sub(r'\(\d\) ', " ",text)
-    text = re.sub(r'\b([0-9]|1[0-9]|20) \b', ' ', text)
-    # xóa tất cả dấu câu
-    # Sử dụng biểu thức chính quy để thay thế các ký tự đặc biệt bằng khoảng trắng
-    text = re.sub(r'[,\t;“:”\'"!?\-?\[\]|\n\(\)\.\*\/\…]', ' ', text)
-
-    
-    # Thay thế các khoảng trắng liên tiếp bằng một khoảng trắng duy nhất
-    text = re.sub(r'\s+', ' ', text)
-
-    return text
+        
 
 def processing_document(document):
     # tinh chỉnh để cắt đoanj
-    document = document.replace("\n\n", "\n")\
-                        .replace("\n\xa0\n", "\n")\
+    document = document.replace("\n\xa0\n", "\n")\
                         .replace("\n- ", " ")\
                         .replace("\n+ ", " ")\
                         .replace("đ)", "d)")
-     
-    document=re.sub(r'\n[a-z]\) ', " ",document)
+                                                                            
+    document=re.sub(r'\n[a-z]\) ', ".",document)
+    document = re.sub(r'[\…]', '', document)
+    
     
     # xóa dòng k cần thiết
     document = re.sub(r'\n_+\n', '\n', document)
@@ -92,13 +78,16 @@ def processing_document(document):
                         .replace(".)", ")")\
                         .replace("v.v.",".")\
                         .replace("\t", " ")
-                  
+    # xóa khoảng cách liên tiếp
+    #document = re.sub(r'\s+', ' ', document)
+    document = document.replace("\n\n", "\n")
+    document = re.sub(r'\.{2,}','.' , document)               
     return document
 
 # chunking document
 def chunking_document(document):
     text_splitter = RecursiveCharacterTextSplitter(
-        separators=["\n\n","\n","."],
+        separators=["\n\n","\n",".",";"],
         chunk_size=1500,
         chunk_overlap=200
     )
@@ -143,30 +132,19 @@ def push_dataset(folder_path):
         #Tạo 1 db mới để ghi dữ liệu vào:
         create_table_query = """
             CREATE TABLE Dataset_chunking (
-                  ID INT,
-                  SoHieu NVARCHAR(200),
-                  LoaiVanBan NVARCHAR(200),
-                  NoiBanHanh NVARCHAR(1000),
-                  NguoiKy NVARCHAR(1000),
-                  NgayBanHanh NVARCHAR(100),
-                  NgayHieuLuc NVARCHAR(100),
-                  NgayCongBao NVARCHAR(100),
-                  SoCongBao NVARCHAR(100),
-                  TinhTrang NVARCHAR(100),
-                  UrlFile NVARCHAR(100),
-                  UrlFilePDF NVARCHAR(100),
-                  TrichYeu NVARCHAR(MAX),
-                  LinhVuc INT,
-                  UrlFileDoc NVARCHAR(100),
-                  ChunkingText NVARCHAR(MAX)
+                KeyPK INT PRIMARY KEY,
+                ID INT,
+                TrichYeu NVARCHAR(MAX),
+                UrlFileDoc NVARCHAR(100),
+                ChunkingText NVARCHAR(MAX)
             );
          """
         cursor.execute(create_table_query)
         connection.commit()
         print("Table 'Dataset_chunking' created successfully.")
         insert_query = f"""
-                        INSERT INTO Dataset_chunking (ID, SoHieu, LoaiVanBan, NoiBanHanh, NguoiKy, NgayBanHanh, NgayHieuLuc, NgayCongBao, SoCongBao, TinhTrang, UrlFile, UrlFilePDF, TrichYeu, LinhVuc, UrlFileDoc, ChunkingText)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                        INSERT INTO Dataset_chunking (KeyPK, ID, TrichYeu, UrlFileDoc, ChunkingText)
+                        VALUES (?, ?, ?, ?, ?);
                     """
 
         #Truy cập db đã tồn tại
@@ -175,7 +153,11 @@ def push_dataset(folder_path):
         cursor.execute(sql_query)
         # Lấy hàng từ tất cả
         rows = cursor.fetchall()
+        i = 1
+        id = 1
         for row in rows:
+            print(i," =====")
+            i = i + 1
             # Láy name file từ db
             file_name = row[10]
             #print(row)
@@ -187,13 +169,15 @@ def push_dataset(folder_path):
                 if list_chunking_texts is not None:
                     for text in list_chunking_texts:
                         if len(text.split())>10:
-                            data_to_insert = [int(row[0]), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],row[10], row[11], row[12], row[22], new_file_name, text]
+                            data_to_insert = [id, int(row[0]),row[12], new_file_name, text]
+                            id = id + 1
                             data_to_insert = [data_to_insert] # vì yêu cầu vào là list
                             cursor.executemany(insert_query, data_to_insert)
                             connection.commit()
                 else:
                     continue
             print(f"Done {new_file_name}")
+            
 
     except pyodbc.Error as ex:
         print("Error connecting to SQL Server:", ex)
@@ -206,6 +190,11 @@ def push_dataset(folder_path):
 
 
 if __name__ == "__main__":
+
+    '''
+    folder_path = "D:\\NLP\\process_van_ban\\data_1_00\\"
+    folder = os.listdir(folder_path)
+    '''
     start_time = datetime.datetime.now()
     folder_path = "D:\\NLP\\process_van_ban\\data_1_00\\"
 

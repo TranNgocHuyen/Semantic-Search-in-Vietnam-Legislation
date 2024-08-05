@@ -6,12 +6,26 @@ import os
 import sys
 
 def main():
-    # thiết lập kết nối với máy chủ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    rabbitmq_config = {
+    "HostName": "10.0.0.85",
+    "UserName": "user",
+    "Password": "user",
+    "Port": 5672,
+    "VirtualHost": "text",
+    "QueryQueue": "query_text",
+    "ResponseQueue": "respond_text"
+    }
+    # Kết nối đến RabbitMQ
+    credentials = pika.PlainCredentials(rabbitmq_config["UserName"], rabbitmq_config["Password"])
+    parameters = pika.ConnectionParameters(rabbitmq_config["HostName"], rabbitmq_config["Port"], rabbitmq_config["VirtualHost"], credentials)
+    connection = pika.BlockingConnection(parameters)
+    # # thiết lập kết nối với máy chủ local
+    # connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    
     channel = connection.channel()
 
-    # Tạo hàng đợi, nơi tin nhắn đc gửi đến
-    channel.queue_declare(queue='hello')
+    # Tạo hàng đợi nếu chưa tồn tại
+    channel.queue_declare(queue=rabbitmq_config["ResponseQueue"], durable=True)
 
     '''
     Kiếm tra danh sách hàng đợi đã tồn tại
@@ -25,7 +39,7 @@ def main():
         #ch.basic_ack(delivery_tag = method.delivery_tag)
 
     #  cho RabbitMQ biết rằng hàm gọi lại cụ thể này sẽ nhận tin nhắn từ hàng đợi hello
-    channel.basic_consume(queue='hello',
+    channel.basic_consume(queue=rabbitmq_config["ResponseQueue"],
                         auto_ack=True, # ?
                         on_message_callback=callback)
     print(' [*] Waiting for messages. To exit press CTRL+C')

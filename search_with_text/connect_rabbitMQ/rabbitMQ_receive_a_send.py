@@ -1,12 +1,16 @@
 # docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 #!python -m pip install pika --upgrade
-
+# some_file.py
+import sys
 import pika
 import os
 import sys
 import json
 
+# caution: path[0] is reserved for script path (or '' in REPL)
+sys.path.insert(1, 'D:\\NLP\\Semantic-Search-in-Vietnam-Legislation\\search_with_text\\search_text_with_Qdrant')
 from text_search import searching_text_to_doc #(text_query, my_collection, limit)
+
 
 rabbitmq_config = {
 "HostName": "10.0.0.85",
