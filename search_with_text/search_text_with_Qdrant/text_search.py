@@ -1,14 +1,14 @@
 # CONNECT
 from qdrant_client import QdrantClient,models
-from model_embedding import embedding_text
+from model_embedding import embedding_text, model_embedding
 
 import datetime
 
-def searching_text_to_doc(text_query, my_collection, limit):
+def searching_text_to_doc(text_query, my_collection, limit, tokenizer, model):
     client=QdrantClient(url="http://localhost:6333")
     search_result=client.search(
         collection_name=my_collection,
-        query_vector= embedding_text(text_query),
+        query_vector= embedding_text(text_query, tokenizer, model),
         # query_filter=models.Filter(
         #    must=[models.FieldCondition(key="dieu", match=models.MatchValue(value="2"))]
         # ),
@@ -33,13 +33,11 @@ def searching_text_to_doc(text_query, my_collection, limit):
                 #'NoiDung':i.payload['ChunkingText'], ################## noi dung
                 
             }
-            #answer_array.append(answer_json)
             if len(answer_array)==0:
                 answer_array.append(answer_json)
             else:
                 count = 0
                 for answer in answer_array:
-                    #id là của 1 văn bản , phải thêm chương, điều, mục
                     if (answer['id'] == answer_json['id']):
                         count=count+1
                 if count==0:
@@ -90,11 +88,13 @@ def searching_text_full(text_query, my_collection, limit):
 
 if __name__ == '__main__':
     start_time = datetime.datetime.now()
-
+    
     my_collection="Chunking_text_VBPL"
     text_query = ''' Đây là text anh Khương gửi'''
-    #searching_text_to_doc(text_query, my_collection, 10)
-    for i, answer in enumerate(searching_text_to_doc(text_query, my_collection, 5)):
+
+
+    tokenizer, model = model_embedding()
+    for i, answer in enumerate(searching_text_to_doc(text_query, my_collection, 5, tokenizer, model)):
         print("Tìm kiếm thứ ", i, " là: ==================================")
         print(answer)
 

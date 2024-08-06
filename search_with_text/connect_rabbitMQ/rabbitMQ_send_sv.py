@@ -26,12 +26,11 @@ channel = connection.channel()
 channel.queue_declare(queue=rabbitmq_config["QueryQueue"], durable=True)
 
 # -> sẵn sàng gửi tin nhắn
-body = 'Day la text anh Khuong gui'
-body =  body.encode('utf-8')
+body = 'Điều 2. Sở Lao động - Thương binh và Xã hội căn cứ danh mục vị trí việc làm; số lượng người làm việc và lao động hợp đồng; cơ cấu chức danh nghề nghiệp; bản mô tả vị trí việc làm, khung năng lực của từng vị trí việc làm trong Đề án kèm theo Quyết định này để làm cơ sở thực hiện tuyển dụng, sử dụng, đào tạo, bồi dưỡng, quản lý số lượng người làm việc và lao động hợp đồng theo quy định của pháp luật, đảm bảo hoàn thành tốt nhiệm vụ được giao.'
 
 channel.basic_publish(exchange='',
                       routing_key=rabbitmq_config["QueryQueue"],  # tên hàng đợi
-                      body=body)
+                      body=body.encode('utf-8'))
 print(f" [x] Sent {body}'")
 
 # đóng kết nối:

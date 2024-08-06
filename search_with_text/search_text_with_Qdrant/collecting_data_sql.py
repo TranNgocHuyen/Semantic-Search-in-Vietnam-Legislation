@@ -16,7 +16,7 @@ def data_sql():
         cursor = connection.cursor()
 
         # CHỌN DATABASE CÂU 'data_ND' ?ĐIỀU 'data_ND_dieu' ?ĐOẠN   
-        sql_query = "SELECT TOP 9000 * FROM [DataV03].[dbo].[Dataset_chunking]"  
+        sql_query = "SELECT TOP 1000 *FROM [DataV03].[dbo].[Dataset_chunking]"
         
         # Thực thi truy vấn
         cursor.execute(sql_query)
@@ -28,18 +28,7 @@ def data_sql():
             jsons = {
                 'KeyPK': row[0],
                 'ID': row[1],
-                # 'LoaiVanBan': row[0],
-                # 'NoiBanHanh': row[0],
-                # 'NguoiKy': row[0],
-                # 'NgayBanHanh': row[0],
-                # 'NgayHieuLuc': row[0],
-                # 'NgayCongBao': row[0],
-                # 'SoCongBao': row[0],
-                # 'TinhTrang': row[0],
-                # 'UrlFile': row[0],
-                # 'UrlFilePDF': row[0],
                 'TrichYeu': row[2],
-                # 'LinhVuc': row[0],
                 'UrlFileDoc': row[3],
                 'ChunkingText': row[4] 
             }
@@ -58,5 +47,6 @@ def data_sql():
 
 if __name__=='__main__':
         dataset=data_sql()
-        for i in range(5):
-            print(dataset[i]['ChunkingText'])
+        for i in dataset:
+            if i['KeyPK']>=11:
+                print(i)

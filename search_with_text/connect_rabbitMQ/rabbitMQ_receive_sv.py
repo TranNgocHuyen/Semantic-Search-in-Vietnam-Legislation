@@ -12,8 +12,8 @@ def main():
     "Password": "user",
     "Port": 5672,
     "VirtualHost": "text",
-    "QueryQueue": "query_text",
-    "ResponseQueue": "respond_text"
+    "QueryQueue": "queue_text_client",
+    "ResponseQueue": "queue_text_server"
     }
     # Kết nối đến RabbitMQ
     credentials = pika.PlainCredentials(rabbitmq_config["UserName"], rabbitmq_config["Password"])

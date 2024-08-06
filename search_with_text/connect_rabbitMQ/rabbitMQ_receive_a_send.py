@@ -10,7 +10,10 @@ import json
 # caution: path[0] is reserved for script path (or '' in REPL)
 sys.path.insert(1, 'D:\\NLP\\Semantic-Search-in-Vietnam-Legislation\\search_with_text\\search_text_with_Qdrant')
 from text_search import searching_text_to_doc #(text_query, my_collection, limit)
+sys.path.insert(1, 'D:\\NLP\\Semantic-Search-in-Vietnam-Legislation\\search_with_text\\search_text_with_Qdrant')
+from model_embedding import model_embedding
 
+tokenizer, model = model_embedding()
 
 rabbitmq_config = {
 "HostName": "10.0.0.85",
@@ -36,20 +39,11 @@ channel.queue_declare(queue=rabbitmq_config["ResponseQueue"], durable=True)
 # # Tạo hàng đợi, nơi tin nhắn đc gửi đến
 # channel.queue_declare(queue='hello')
 
-
-def process_text(text):
-    # Xử lý văn bản bằng mô hình AI của bạn
-    result = [{"ID": f"ID1 after processed text: {text}"}, {"ID": f"ID2 after processed text: {text}"}]
-    return result
-
-
-
 def callback(ch, method, properties, body):
-    
-    message = body.decode('utf-8')  # Chuyển đổi từ bytes sang str
-    text = message
+    global tokenizer, model
+    text = body.decode('utf-8')  # Chuyển đổi từ bytes sang str
     print(f" [x] Received {text}")
-    result = searching_text_to_doc(text, my_collection= "Chunking_text_VBPL", limit=5)
+    result = searching_text_to_doc(text, my_collection= "Chunking_text_VBPL", limit=20, tokenizer= tokenizer, model = model)
     response = json.dumps(result)
     response = response.encode('utf-8')
     print(f" [x] Send {response}")
@@ -59,7 +53,6 @@ def callback(ch, method, properties, body):
     channel.basic_publish(exchange='',
                           routing_key=rabbitmq_config["ResponseQueue"],
                           body=response)
-
 
 try:
     channel.basic_consume(queue=rabbitmq_config["QueryQueue"], on_message_callback=callback, auto_ack=True)

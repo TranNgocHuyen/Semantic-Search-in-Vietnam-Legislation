@@ -7,21 +7,18 @@ from transformers import AutoModel, AutoTokenizer
 
 from preprocessing import preprocess_text
 
-
-
-# Load model and embedding text funtion
-def embedding_text(text):
+def model_embedding():
     # checkpoint_model = 'dangvantuan/vietnamese-embedding'  # 512 -> 768
     checkpoint_model = "VoVanPhuc/sup-SimCSE-VietNamese-phobert-base"  # 256 -> 768
-
-    text = preprocess_text(text) # nên có để ghép cái từ ghép với nhau=> hạn chế số tokenizer
-
     tokenizer = AutoTokenizer.from_pretrained(checkpoint_model) #vocab_size=64000, model_max_length=256 
     model = AutoModel.from_pretrained(checkpoint_model)
-
     # print(tokenizer)
     # print(model)
+    return tokenizer, model
 
+# Load model and embedding text funtion
+def embedding_text(text, tokenizer, model):
+    text = preprocess_text(text)
     inputs = tokenizer(text,padding=True, truncation=True, return_tensors="pt") #258
     
     # print(inputs.input_ids.shape,'=') #431

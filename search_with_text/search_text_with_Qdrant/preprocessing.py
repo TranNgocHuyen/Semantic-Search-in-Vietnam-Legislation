@@ -97,6 +97,35 @@ def preprocess_text(text):
     return filtered_text
 
 if __name__=='__main__':
-    text='Thủ tục hành chính và lĩnh vực Thi đua  khen thưởng có số thứ tự 01  02 điểm A1 mục A danh mục 1 ban hành kèm theo Quyết định số 786 QĐ BVHTTDL ngày 31 tháng 3 năm 2023 của Bộ trưởng Bộ Văn hóa  Thể thao và Du lịch về việc công bố thủ tục hành chính nội bộ giữa các cơ quan  đơn vị trực thuộc Bộ và trong nội bộ cơ quan  đơn vị trực thuộc Bộ thuộc phạm vi chức năng quản lý của Bộ Văn hóa  Thể thao và Du lịch hết hiệu lực thi hành kể từ ngày Quyết định này có hiệu lực thi hành'
+    #text='Thủ tục hành chính và lĩnh vực Thi đua  khen thưởng có số thứ tự 01  02 điểm A1 mục A danh mục 1 ban hành kèm theo Quyết định số 786 QĐ BVHTTDL ngày 31 tháng 3 năm 2023 của Bộ trưởng Bộ Văn hóa  Thể thao và Du lịch về việc công bố thủ tục hành chính nội bộ giữa các cơ quan  đơn vị trực thuộc Bộ và trong nội bộ cơ quan  đơn vị trực thuộc Bộ thuộc phạm vi chức năng quản lý của Bộ Văn hóa  Thể thao và Du lịch hết hiệu lực thi hành kể từ ngày Quyết định này có hiệu lực thi hành'
+    text = '''
+        QUYẾT ĐỊNH
+VỀ VIỆC CÔNG BỐ THỦ TỤC HÀNH CHÍNH NỘI BỘ MỚI BAN HÀNH VÀ SỬA ĐỔI, BỔ SUNG TRONG LĨNH VỰ LỊCH
+BỘ TRƯỞNG BỘ VĂN HÓA, THỂ THAO VÀ DU LỊCH
+QUYẾT ĐỊNH:
+Điều 1. Công bố kèm theo Quyết định này thủ tục hành chính nội bộ mới ban hành và sửa đổ Văn hóa, Thể thao và Du lịch.
+Điều 2. Quyết định này có hiệu lực thi hành kể từ ngày ký.
+Thủ tục hành chính lĩnh vực Thi đua, khen thưởng có số thứ tự 01, 02 điểm A1 mục A danh 
+trưởng Bộ Văn hóa, Thể thao và Du lịch về việc công bố thủ tục hành chính nội bộ giữa cáhạm vi chức năng quản lý của Bộ Văn hóa, Thể thao và Du lịch hết hiệu lực thi hành kể từ
+Điều 3. Chánh Văn phòng Bộ, Vụ trưởng Vụ Tổ chức cán bộ, Thủ trưởng các cơ quan, đơn vị 
+
+THỦ TỤC HÀNH CHÍNH NỘI BỘ MỚI BAN HÀNH VÀ SỬA ĐỔI, BỔ SUNG TRONG LĨNH VỰC THI ĐUA, KHEN 
+(Kèm theo Quyết định số 987/QĐ-BVHTTDL ngày 11 tháng 4 năm 2024 của Bộ trưởng Bộ Văn hóa
+PHẦN I
+DANH MỤC THỦ TỤC HÀNH CHÍNH NỘI BỘ
+1. Thủ tục hành chính nội bộ mới ban hành
+(1) Danh hiệu “Cờ thi đua của Bộ” được xét tặng vào dịp kết thúc năm công tác hoặc kết t, khen thưởng.
+(2) Danh hiệu “Cờ thi đua của Bộ” được xét tặng cho tập thể dẫn đầu phong trào thi đua thong trào.
+* Đối tượng xét tặng danh hiệu “Cờ thi đua của Bộ” là các tập thể tiêu biểu, dẫn đầu pho, bao gồm: Cơ quan, đơn vị thuộc Bộ; Phòng thuộc các cơ quan, đơn vị thuộc Bộ.Căn cứ phágày 31/12/2023 của Chính phủ quy định chi tiết thi hành một số điều của Luật Thi đua, khhể thao và Du lịch quy định về công tác thi đua, khen thưởng Ngành văn hóa, thể thao và 
+Mẫu số 01
+TỜ TRÌNH
+Về việc đề nghị khen thưởng .5./tặng (truy tặng) danh hiệu.6.
+Kính gửi: .
+Căn cứ Luật Thi đua, khen thưởng ngày 15/6/2022;
+Căn cứ  7. quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của. 2 .;
+Căn cứ . 8. ; .2 kính trình .:
+Xét tặng/truy tặng (danh hiệu .6 ) cho. tập thể/ hộ gia đình/.cá nhân.
+Hoặc xét, tặng/truy tặng (hình thức khen thưởng của Chính phủ, Thủ tướng Chính phủ 9) ch
+        '''
     print(preprocess_text(text))
 
