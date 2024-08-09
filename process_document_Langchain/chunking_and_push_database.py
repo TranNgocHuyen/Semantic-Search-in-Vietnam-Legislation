@@ -55,8 +55,8 @@ def search_remove_line(line):
 def processing_document(document):
     # tinh chỉnh để cắt đoanj
     document = document.replace("\n\xa0\n", "\n")\
-                        .replace("\n- ", " ")\
-                        .replace("\n+ ", " ")\
+                        .replace("\n- ", ".")\
+                        .replace("\n+ ", ".")\
                         .replace("đ)", "d)")
                                                                             
     document=re.sub(r'\n[a-z]\) ', ".",document)

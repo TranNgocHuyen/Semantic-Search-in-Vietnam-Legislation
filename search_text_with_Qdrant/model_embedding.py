@@ -23,7 +23,7 @@ def embedding_text(text, tokenizer, model):
     
     # print(inputs.input_ids.shape,'=') #431
     #print(f"Token sau khi tokenizer: {tokenizer.tokenize(text)}",'==')
-    print(f"Chiều dài token: {len(tokenizer.tokenize(text))}",'===')
+    #print(f"Chiều dài token: {len(tokenizer.tokenize(text))}",'===')
 
     with torch.no_grad():
         embeddings = model(**inputs, output_hidden_states=True, return_dict=True).pooler_output

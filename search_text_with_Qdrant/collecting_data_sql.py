@@ -16,7 +16,7 @@ def data_sql():
         cursor = connection.cursor()
 
         # CHỌN DATABASE CÂU 'data_ND' ?ĐIỀU 'data_ND_dieu' ?ĐOẠN   
-        sql_query = "SELECT TOP 1000 *FROM [DataV03].[dbo].[Dataset_chunking]"
+        sql_query = "SELECT TOP 50000 *FROM [DataV03].[dbo].[Dataset_chunking_v2]"
         
         # Thực thi truy vấn
         cursor.execute(sql_query)
@@ -47,6 +47,26 @@ def data_sql():
 
 if __name__=='__main__':
         dataset=data_sql()
+        array_id_vb=[]
+        
         for i in dataset:
-            if i['KeyPK']>=11:
-                print(i)
+            print(f"ID {i['ID']}")
+            if len(array_id_vb) ==0:
+                array_id_vb.append(i['ID'])
+            else:
+                count =0
+                for j in array_id_vb:
+                    if i['ID'] == j:
+                        count =count +1
+                if count ==0:
+                    array_id_vb.append(i['ID'])
+
+        print(len(array_id_vb))
+# 6090
+'''
+json_file=open("dataset.json","w")
+
+json.dump(data,json_file, indent=4)
+
+print("Conversion to JSON completed successfully.")   
+'''
